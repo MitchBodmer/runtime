@@ -437,6 +437,22 @@ namespace System.Net.Http
         public Task<HttpResponseMessage> DeleteAsync(Uri? requestUri, CancellationToken cancellationToken) =>
             SendAsync(CreateRequestMessage(HttpMethod.Delete, requestUri), cancellationToken);
 
+        public Task<HttpResponseMessage> QueryAsync([StringSyntax(StringSyntaxAttribute.Uri)] string? requestUri, HttpContent? content) =>
+            QueryAsync(CreateUri(requestUri), content);
+
+        public Task<HttpResponseMessage> QueryAsync(Uri? requestUri, HttpContent? content) =>
+            QueryAsync(requestUri, content, CancellationToken.None);
+
+        public Task<HttpResponseMessage> QueryAsync([StringSyntax(StringSyntaxAttribute.Uri)] string? requestUri, HttpContent? content, CancellationToken cancellationToken) =>
+            QueryAsync(CreateUri(requestUri), content, cancellationToken);
+
+        public Task<HttpResponseMessage> QueryAsync(Uri? requestUri, HttpContent? content, CancellationToken cancellationToken)
+        {
+            HttpRequestMessage request = CreateRequestMessage(HttpMethod.Query, requestUri);
+            request.Content = content;
+            return SendAsync(request, cancellationToken);
+        }
+
         #endregion REST Send Overloads
 
         #region Advanced Send Overloads
